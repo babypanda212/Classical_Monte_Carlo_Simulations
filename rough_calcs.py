@@ -1,6 +1,11 @@
 import SIM_MC_functions as mc
 import numpy as np
 
+# see paper about binning analysis, very interesting and 
+# relevant to SIM
+# understand """ what Xl^(k) is ! ask Yoshito for help
+# """
+
 size = 10
 temperature = 1.0
 J = 1.0

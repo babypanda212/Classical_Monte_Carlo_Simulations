@@ -1,7 +1,7 @@
 import SIM_MC_functions as mc
 import numpy as np
 
-# TASKS
+# TASKS 
 # 3.1
 
 import matplotlib.pyplot as plt

@@ -103,10 +103,10 @@ def binning_analysis(X, kmax):
 
     for k in range(1, kmax + 1):
         Mk = M // k
-        Xk = np.mean(np.reshape(X[:k * Mk], (k, Mk)), axis=0)
+        Xk = np.mean(np.reshape(X, (k, Mk)), axis=0)
         
         # Compute coarse grained sequence
-        error_est[k-1] = np.std(Xk) / np.sqrt(Mk)
+        error_est[k-1] = np.std(Xk) / np.sqrt(Mk-1)
     
     return error_est
 
