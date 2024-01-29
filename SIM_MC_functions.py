@@ -103,38 +103,18 @@ def binning_analysis(X, kmax):
 
     for k in range(1, kmax + 1):
         Mk = M // k
-        Xk = np.mean(np.reshape(X, (k, Mk)), axis=0)
-        
-        # Compute coarse grained sequence
-        error_est[k-1] = np.std(Xk) / np.sqrt(Mk-1)
-    
+        Xk_splits = np.array_split(X, k)  # Split the array into k parts
+
+        # Calculate mean for each bin, ignoring empty bins
+        bin_means = np.array([np.mean(bin_array) if len(bin_array) > 0 else np.nan for bin_array in Xk_splits])
+
+        # Check if there is at least one non-empty bin
+        if np.isnan(bin_means).all():
+            error_est[k-1] = np.nan
+        else:
+            bin_std_dev = np.nanstd(bin_means)
+
+            # Compute coarse-grained sequence
+            error_est[k-1] = bin_std_dev / np.sqrt(Mk-1) if Mk > 1 else np.nan
+
     return error_est
-
-size = 10
-temperature = 1.0
-J = 1.0
-B = 0.0
-N = 10
-
-parameters = (temperature,J,B,N)
-
-lattice = initialize_lattice(size)
-lattice, energies, wts = update_sweep(lattice,*parameters)
-
-# calculate estimation of expectation value of energy
-energy_EV = np.sum(energies)/N
-
-# calculate estimation of the expectation value of energy squared
-energy_squared_EV = np.sum(np.square(energies)) / N
-
-# specific heat
-specific_heat = (energy_squared_EV - energy_EV**2) / temperature
-
-# calculate variance
-variance = np.sum(*((energies-energy_EV)**2))
-
-# calculating error estimate for energy expectation value
-error = np.sqrt(variance/len(lattice))
-
-# calculate entropy
-entropy = np.log(2) - specific_heat*np.log(temperature)
